@@ -58,3 +58,16 @@ export type PaymentType = {
   +paymentBrand?: string,
   +paymentType: string
 };
+
+export type PayloadType = {
+  [key: string]: string | PayloadType
+};
+
+export type ResponseType = {
+  +id: string,
+  +registrationId?: string,
+  +result: {
+    +code: string,
+    +description: string
+  }
+};

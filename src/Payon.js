@@ -1,27 +1,34 @@
 // @flow
 
 import qs from 'qs';
-import fetch from 'xfetch';
+import fetch, {
+  UnexpectedResponseCodeError
+} from 'xfetch';
 import {
   createDebug
 } from './factories';
+import {
+  PayonRemoteError
+} from './errors';
 import type {
+  AuthenticationType,
+  PayloadType,
+  PaymentType,
+  ResponseType
+} from './types';
+
+export {
+  PayonRemoteError
+} from './errors';
+export type {
   AuthenticationType,
   PaymentType
 } from './types';
 
 const debug = createDebug('Payon');
 
-type PayloadType = {
-  [key: string]: string | PayloadType
-};
-
-type ResponseType = {
-  result: {
-    code: string,
-    description: string
-  }
-};
+const successfulTransactionCodeRule = /^(000\.000\.|000\.100\.1|000\.[36])/;
+const maybeSuccessfulTransactionCodeRule = /^(000\.400\.0|000\.400\.100)/;
 
 export default class Payon {
   apiUrl: string;
@@ -32,12 +39,38 @@ export default class Payon {
     this.authentication = authentication;
   }
 
-  createPayment (payment: PaymentType) {
-    return Payon.post(this.apiUrl, this.authentication, 'payments', payment);
+  async createPayment (payment: PaymentType) {
+    const response = await Payon.post(this.apiUrl, this.authentication, 'payments', payment);
+
+    if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
+      return response;
+    }
+
+    throw new PayonRemoteError(response);
   }
 
-  static async post (apiUrl: string, authentication: AuthenticationType, resource: 'payments', payload: PayloadType): Promise<ResponseType> {
-    const response = await fetch(apiUrl + 'payments', {
+  async capturePayment (id: string, payment: PaymentType) {
+    const response = await Payon.post(this.apiUrl, this.authentication, 'payments/' + id, payment);
+
+    if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
+      return response;
+    }
+
+    throw new PayonRemoteError(response);
+  }
+
+  async createRegistrationPayment (registrationId: string, payment: PaymentType) {
+    const response = await Payon.post(this.apiUrl, this.authentication, 'registrations/' + registrationId + '/payments', payment);
+
+    if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
+      return response;
+    }
+
+    throw new PayonRemoteError(response);
+  }
+
+  static async post (apiUrl: string, authentication: AuthenticationType, resource: string, payload: PayloadType): Promise<ResponseType> {
+    const response = await fetch(apiUrl + resource, {
       body: qs.stringify({
         ...payload,
         authentication
@@ -47,6 +80,13 @@ export default class Payon {
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
         'user-agent': 'npm/gajus/payon'
+      },
+      isResponseValid: (intermediateResponse) => {
+        if (!String(intermediateResponse.status).startsWith('2') && !String(intermediateResponse.status).startsWith('3') && intermediateResponse.status !== 400) {
+          throw new UnexpectedResponseCodeError(response);
+        }
+
+        return true;
       },
       method: 'post',
       responseType: 'json'
