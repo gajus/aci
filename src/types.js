@@ -50,7 +50,7 @@ export type CustomerType = {
 export type PaymentType = {
   +amount: string,
   +card?: CardType,
-  +createRegistration?: string,
+  +createRegistration?: boolean,
   +currency: string,
   +descriptor?: string,
   +merchantInvoiceId?: string,
@@ -59,9 +59,8 @@ export type PaymentType = {
   +paymentType: string
 };
 
-export type PayloadType = {
-  [key: string]: string | PayloadType
-};
+// eslint-disable-next-line flowtype/no-weak-types
+export type PayloadType = Object;
 
 export type ResponseType = {
   +id: string,
@@ -72,4 +71,11 @@ export type ResponseType = {
   }
 };
 
-export type ValidationErrorType = any;
+export type ValidationErrorType = {
+  keyword: string,
+  schemaPath: string,
+  params: {
+    [key: string]: string
+  },
+  message: string
+};

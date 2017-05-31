@@ -88,6 +88,10 @@ test('create a token during a PA; use the token for a DB', async (t) => {
   t.true(paResponse.result.code === '000.100.110');
   t.true(typeof paResponse.registrationId === 'string');
 
+  if (!paResponse.registrationId) {
+    throw new Error('Unexpected state.');
+  }
+
   const dbResponse = await client.createRegistrationPayment(paResponse.registrationId, {
     amount: '1.00',
     currency: 'GBP',
