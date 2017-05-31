@@ -33,6 +33,7 @@
     "flow-bin": "^0.47.0",
     "husky": "^0.13.4",
     "nyc": "^10.3.2",
+    "semantic-release": "^6.3.6",
     "sinon": "^2.3.2"
   },
   "engines": {
