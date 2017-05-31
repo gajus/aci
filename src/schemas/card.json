@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cvv": {
+      "pattern": "^[0-9]{3,4}$",
+      "type": "string"
+    },
+    "expiryMonth": {
+      "pattern": "^(0[1-9]|1[0-2])$",
+      "type": "string"
+    },
+    "expiryYear": {
+      "pattern": "^20([0-9]{2})$",
+      "type": "string"
+    },
+    "holder": {
+      "pattern": "^.{3,128}$",
+      "type": "string"
+    },
+    "number": {
+      "pattern": "^[0-9]{12,19}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "number",
+    "expiryMonth",
+    "expiryYear"
+  ],
+  "type": "object"
+}

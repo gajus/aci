@@ -1,47 +1,48 @@
 {
-  "definitions": {
-    "payment": {
-      "additionalProperties": false,
-      "properties": {
-        "amount": {
-          "pattern": "^[0-9]{1,8}(.[0-9]{2})?$",
-          "type": "string"
-        },
-        "currency": {
-          "pattern": "^[A-Z]{3}$",
-          "type": "string"
-        },
-        "descriptor": {
-          "pattern": "^[\\s\\S]{1,127}$",
-          "type": "string"
-        },
-        "merchantInvoiceId": {
-          "pattern": "^[\\s\\S]{8,255}$",
-          "type": "string"
-        },
-        "merchantTransactionId": {
-          "pattern": "^[\\s\\S]{8,255}$",
-          "type": "string"
-        },
-        "paymentBrand": {
-          "pattern": "^[a-zA-Z0-9_]{1,32}$",
-          "type": "string"
-        },
-        "paymentType": {
-          "enum": [
-            "PA",
-            "DB",
-            "CD",
-            "CP",
-            "RV",
-            "RF"
-          ]
-        }
-      },
-      "required": [
-        "currency"
-      ],
-      "type": "object"
+  "additionalProperties": false,
+  "properties": {
+    "amount": {
+      "pattern": "^[0-9]{1,8}(.[0-9]{2})?$",
+      "type": "string"
+    },
+    "createRegistration": {
+      "type": "boolean"
+    },
+    "currency": {
+      "pattern": "^[A-Z]{3}$",
+      "type": "string"
+    },
+    "descriptor": {
+      "pattern": "^[\\s\\S]{1,127}$",
+      "type": "string"
+    },
+    "merchantInvoiceId": {
+      "pattern": "^[\\s\\S]{8,255}$",
+      "type": "string"
+    },
+    "merchantTransactionId": {
+      "pattern": "^[\\s\\S]{8,255}$",
+      "type": "string"
+    },
+    "paymentBrand": {
+      "pattern": "^[a-zA-Z0-9_]{1,32}$",
+      "type": "string"
+    },
+    "paymentType": {
+      "enum": [
+        "PA",
+        "DB",
+        "CD",
+        "CP",
+        "RV",
+        "RF"
+      ]
     }
-  }
+  },
+  "required": [
+    "amount",
+    "currency",
+    "paymentType"
+  ],
+  "type": "object"
 }

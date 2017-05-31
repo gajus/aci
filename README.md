@@ -52,3 +52,8 @@ const paymentPayload: PaymentType = {
 const paResponse = await client.createPayment(paymentPayload);
 
 ```
+
+## Handling errors
+
+* A malformed request results in a [`MalformedRequestError`](./errors.js) error.
+* A response with a result code other than success results in a [`PayonRemoteError`](./errors.js) error.

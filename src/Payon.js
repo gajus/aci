@@ -5,9 +5,10 @@ import fetch, {
   UnexpectedResponseCodeError
 } from 'xfetch';
 import {
-  createDebug
-} from './factories';
+  validatePayment
+} from './validators';
 import {
+  MalformedRequestError,
   PayonRemoteError
 } from './errors';
 import type {
@@ -18,14 +19,13 @@ import type {
 } from './types';
 
 export {
+  MalformedRequestError,
   PayonRemoteError
 } from './errors';
 export type {
   AuthenticationType,
   PaymentType
 } from './types';
-
-const debug = createDebug('Payon');
 
 const successfulTransactionCodeRule = /^(000\.000\.|000\.100\.1|000\.[36])/;
 const maybeSuccessfulTransactionCodeRule = /^(000\.400\.0|000\.400\.100)/;
@@ -40,6 +40,12 @@ export default class Payon {
   }
 
   async createPayment (payment: PaymentType) {
+    const validationErrors = validatePayment(payment);
+
+    if (validationErrors.length) {
+      throw new MalformedRequestError(validationErrors);
+    }
+
     const response = await Payon.post(this.apiUrl, this.authentication, 'payments', payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
@@ -50,6 +56,12 @@ export default class Payon {
   }
 
   async capturePayment (id: string, payment: PaymentType) {
+    const validationErrors = validatePayment(payment);
+
+    if (validationErrors.length) {
+      throw new MalformedRequestError(validationErrors);
+    }
+
     const response = await Payon.post(this.apiUrl, this.authentication, 'payments/' + id, payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
@@ -79,7 +91,7 @@ export default class Payon {
       }),
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
-        'user-agent': 'npm/gajus/payon'
+        'user-agent': 'payon'
       },
       isResponseValid: (intermediateResponse) => {
         if (!String(intermediateResponse.status).startsWith('2') && !String(intermediateResponse.status).startsWith('3') && intermediateResponse.status !== 400) {

@@ -71,3 +71,5 @@ export type ResponseType = {
     +description: string
   }
 };
+
+export type ValidationErrorType = any;
