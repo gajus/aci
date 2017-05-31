@@ -1,3 +1,10 @@
+// @flow
+
+import qs from 'qs';
+import fetch from 'xfetch';
+import {
+  createDebug
+} from './factories';
 import type {
   AuthenticationType,
   PaymentType
@@ -48,9 +55,3 @@ export default class Payon {
     return response;
   }
 }
-// @flow
-
-import qs from 'qs';
-import fetch from 'xfetch';
-import {
-  createDebug
