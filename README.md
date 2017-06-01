@@ -6,7 +6,7 @@
 [![Canonical Code Style](https://img.shields.io/badge/code%20style-canonical-blue.svg?style=flat-square)](https://github.com/gajus/canonical)
 [![Twitter Follow](https://img.shields.io/twitter/follow/kuizinas.svg?style=social&label=Follow)](https://twitter.com/kuizinas)
 
-[ACI](https://www.aciworldwide.com/) Universal Payments (server-to-server) SDK.
+[ACI](https://www.aciworldwide.com/) [Universal Payments (server-to-server)](https://docs.aciworldwide.com/reference/parameters) SDK.
 
 ## Usage
 
