@@ -6,6 +6,9 @@
 [![Canonical Code Style](https://img.shields.io/badge/code%20style-canonical-blue.svg?style=flat-square)](https://github.com/gajus/canonical)
 [![Twitter Follow](https://img.shields.io/twitter/follow/kuizinas.svg?style=social&label=Follow)](https://twitter.com/kuizinas)
 
+> DEPRECATED:
+> Deprecated in favour of https://github.com/gajus/aci.
+
 [Payon](https://payon.com/) server-to-server SDK.
 
 > In its current state, the SDK is designed for the use with a specific application.
