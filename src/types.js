@@ -1,7 +1,7 @@
 // @flow
 
 /**
- * @see https://docs.payon.com/reference/parameters#authentication
+ * @see Acihttps://docs.aciworldwide.com/reference/parameters#authentication
  */
 export type AuthenticationType = {
   +entityId: string,
@@ -10,7 +10,7 @@ export type AuthenticationType = {
 };
 
 /**
- * @see https://docs.payon.com/reference/parameters#card
+ * @see Acihttps://docs.aciworldwide.com/reference/parameters#card
  */
 export type CardType = {
   +cvv?: string,
@@ -26,7 +26,7 @@ export type BrowserFingerprintType = {
 };
 
 /**
- * @see https://docs.payon.com/reference/parameters#customer
+ * @see Acihttps://docs.aciworldwide.com/reference/parameters#customer
  */
 export type CustomerType = {
   birthDate?: string,

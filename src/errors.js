@@ -11,11 +11,11 @@ import type {
 
 const debug = createDebug('errors');
 
-export class PayonError extends ExtendableError {
+export class AciError extends ExtendableError {
 
 }
 
-export class PayonRemoteError extends PayonError {
+export class AciRemoteError extends AciError {
   code: string;
   message: string;
   response: ResponseType;
@@ -29,7 +29,7 @@ export class PayonRemoteError extends PayonError {
   }
 }
 
-export class MalformedRequestError extends PayonError {
+export class MalformedRequestError extends AciError {
   errors: $ReadOnlyArray<ValidationErrorType>;
 
   constructor (errors: $ReadOnlyArray<ValidationErrorType>) {

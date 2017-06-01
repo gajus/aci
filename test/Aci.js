@@ -1,17 +1,17 @@
 // @flow
 
 import test from 'ava';
-import Payon, {
+import Aci, {
   MalformedRequestError,
-  PayonRemoteError
-} from '../src/Payon';
+  AciRemoteError
+} from '../src/Aci';
 import {
   apiUrl,
   authentication
 } from './fixtures/config';
 
 test('throws MalformedRequestError error if request body is malformed', async (t) => {
-  const client = new Payon(apiUrl, authentication);
+  const client = new Aci(apiUrl, authentication);
 
   // $FlowFixMe
   const request = client.createPayment({
@@ -22,7 +22,7 @@ test('throws MalformedRequestError error if request body is malformed', async (t
 });
 
 test('creates a DB', async (t) => {
-  const client = new Payon(apiUrl, authentication);
+  const client = new Aci(apiUrl, authentication);
 
   const response = await client.createPayment({
     amount: '1.00',
@@ -42,7 +42,7 @@ test('creates a DB', async (t) => {
 });
 
 test('creates a PA and CP', async (t) => {
-  const client = new Payon(apiUrl, authentication);
+  const client = new Aci(apiUrl, authentication);
 
   const paResponse = await client.createPayment({
     amount: '1.00',
@@ -68,7 +68,7 @@ test('creates a PA and CP', async (t) => {
 });
 
 test('create a token during a PA; use the token for a DB', async (t) => {
-  const client = new Payon(apiUrl, authentication);
+  const client = new Aci(apiUrl, authentication);
 
   const paResponse = await client.createPayment({
     amount: '1.00',
@@ -102,8 +102,8 @@ test('create a token during a PA; use the token for a DB', async (t) => {
   t.true(dbResponse.result.code === '000.100.110');
 });
 
-test('rejected transaction raises PayonRemoteError error', async (t) => {
-  const client = new Payon(apiUrl, authentication);
+test('rejected transaction raises AciRemoteError error', async (t) => {
+  const client = new Aci(apiUrl, authentication);
 
   const request = client.createPayment({
     amount: '1.00',
@@ -119,7 +119,7 @@ test('rejected transaction raises PayonRemoteError error', async (t) => {
     paymentType: 'DB'
   });
 
-  const error = await t.throws(request, PayonRemoteError);
+  const error = await t.throws(request, AciRemoteError);
 
   t.true(error.code && error.code === '100.100.101');
 });

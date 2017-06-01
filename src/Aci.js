@@ -8,8 +8,8 @@ import {
   validatePayment
 } from './validators';
 import {
-  MalformedRequestError,
-  PayonRemoteError
+  AciRemoteError,
+  MalformedRequestError
 } from './errors';
 import type {
   AuthenticationType,
@@ -19,8 +19,8 @@ import type {
 } from './types';
 
 export {
-  MalformedRequestError,
-  PayonRemoteError
+  AciRemoteError,
+  MalformedRequestError
 } from './errors';
 export type {
   AuthenticationType,
@@ -30,7 +30,7 @@ export type {
 const successfulTransactionCodeRule = /^(000\.000\.|000\.100\.1|000\.[36])/;
 const maybeSuccessfulTransactionCodeRule = /^(000\.400\.0|000\.400\.100)/;
 
-export default class Payon {
+export default class Aci {
   apiUrl: string;
   authentication: AuthenticationType;
 
@@ -46,13 +46,13 @@ export default class Payon {
       throw new MalformedRequestError(validationErrors);
     }
 
-    const response = await Payon.post(this.apiUrl, this.authentication, 'payments', payment);
+    const response = await Aci.post(this.apiUrl, this.authentication, 'payments', payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
       return response;
     }
 
-    throw new PayonRemoteError(response);
+    throw new AciRemoteError(response);
   }
 
   async capturePayment (id: string, payment: PaymentType) {
@@ -62,23 +62,23 @@ export default class Payon {
       throw new MalformedRequestError(validationErrors);
     }
 
-    const response = await Payon.post(this.apiUrl, this.authentication, 'payments/' + id, payment);
+    const response = await Aci.post(this.apiUrl, this.authentication, 'payments/' + id, payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
       return response;
     }
 
-    throw new PayonRemoteError(response);
+    throw new AciRemoteError(response);
   }
 
   async createRegistrationPayment (registrationId: string, payment: PaymentType) {
-    const response = await Payon.post(this.apiUrl, this.authentication, 'registrations/' + registrationId + '/payments', payment);
+    const response = await Aci.post(this.apiUrl, this.authentication, 'registrations/' + registrationId + '/payments', payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
       return response;
     }
 
-    throw new PayonRemoteError(response);
+    throw new AciRemoteError(response);
   }
 
   static async post (apiUrl: string, authentication: AuthenticationType, resource: string, payload: PayloadType): Promise<ResponseType> {
@@ -91,7 +91,7 @@ export default class Payon {
       }),
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
-        'user-agent': 'payon'
+        'user-agent': 'aci'
       },
       isResponseValid: (intermediateResponse) => {
         if (!String(intermediateResponse.status).startsWith('2') && !String(intermediateResponse.status).startsWith('3') && intermediateResponse.status !== 400) {
