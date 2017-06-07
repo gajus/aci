@@ -27,6 +27,7 @@ export type {
   PaymentType
 } from './types';
 
+// @todo Document source of the regex rules.
 const successfulTransactionCodeRule = /^(000\.000\.|000\.100\.1|000\.[36])/;
 const maybeSuccessfulTransactionCodeRule = /^(000\.400\.0|000\.400\.100)/;
 
@@ -72,6 +73,12 @@ export default class Aci {
   }
 
   async createRegistrationPayment (registrationId: string, payment: PaymentType) {
+    const validationErrors = validatePayment(payment);
+
+    if (validationErrors.length) {
+      throw new MalformedRequestError(validationErrors);
+    }
+
     const response = await Aci.post(this.apiUrl, this.authentication, 'registrations/' + registrationId + '/payments', payment);
 
     if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
