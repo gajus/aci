@@ -81,6 +81,19 @@ export default class Aci {
     throw new AciRemoteError(response);
   }
 
+  async reversePayment (paymentId: string) {
+    const response = await Aci.post(this.apiUrl, this.authentication, 'payments/' + paymentId, {
+      paymentType: 'RV'
+    });
+
+    // @todo Find out which are the expected/ unexpected response codes for RV.
+    if (successfulTransactionCodeRule.test(response.result.code) || maybeSuccessfulTransactionCodeRule.test(response.result.code)) {
+      return response;
+    }
+
+    throw new AciRemoteError(response);
+  }
+
   static async post (apiUrl: string, authentication: AuthenticationType, resource: string, payload: PayloadType): Promise<ResponseType> {
     const response = await fetch(apiUrl + resource, {
       body: qs.stringify({
