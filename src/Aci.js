@@ -40,6 +40,9 @@ export default class Aci {
     this.authentication = authentication;
   }
 
+  /**
+   * https://docs.aciworldwide.com/reference/parameters#basic
+   */
   async createPayment (payment: PaymentType) {
     const validationErrors = validatePayment(payment);
 
@@ -56,6 +59,9 @@ export default class Aci {
     throw new AciRemoteError(response);
   }
 
+  /**
+   * @see https://docs.aciworldwide.com/tutorials/manage-payments/backoffice#capture
+   */
   async capturePayment (id: string, payment: PaymentType) {
     const validationErrors = validatePayment(payment);
 
@@ -88,6 +94,10 @@ export default class Aci {
     throw new AciRemoteError(response);
   }
 
+  /**
+   * @see https://docs.aciworldwide.com/tutorials/manage-payments/backoffice#refund
+   * @see https://docs.aciworldwide.com/reference/parameters#basic
+   */
   async reversePayment (paymentId: string) {
     const response = await Aci.post(this.apiUrl, this.authentication, 'payments/' + paymentId, {
       paymentType: 'RV'
